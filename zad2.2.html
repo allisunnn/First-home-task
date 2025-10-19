@@ -7,16 +7,16 @@
 <body>
   <form action="#" method="post">
     <label for="imie">Imię:</label><br>
-    <input type="text" id="imie" name="imie"><br><br>
+    <input type="text" id="imie" name="imie"required><br><br>
 
     <label for="nazwisko">Nazwisko:</label><br>
-    <input type="text" id="nazwisko" name="nazwisko"><br><br>
+    <input type="text" id="nazwisko" name="nazwisko" required><br><br>
 
     <label for="data">Data urodzenia:</label><br>
-    <input type="date" id="data" name="data_urodzenia"><br><br>
+    <input type="date" id="data" name="data_urodzenia" required><br><br>
 
     <label for="haslo">Hasło:</label><br>
-    <input type="password" id="haslo" name="haslo"><br><br>
+    <input type="password" id="haslo" name="haslo" required><br><br>
     
     <label for="ulica">Ulica:</label><br>
     <input type="text" id="ulica" name="ulica"><br><br>
@@ -25,11 +25,11 @@
     <input type="text" id="miasto" name="miasto"><br><br>
     
     <label for="email">Email:</label><br>
-    <input type="email" id="email" name="email"><br><br>
+    <input type="email" id="email" name="email" required><br><br>
 
     <label for="prawo_jazdy">Czy posiadasz prawo jazdy?</label><br>
     
-    <input type="radio" id="tak" name="prawo_jazdy" value="tak">
+    <input type="radio" id="tak" name="prawo_jazdy" value="tak" required>
     <label for="tak">Tak</label><br>
 
     <input type="radio" id="nie" name="prawo_jazdy" value="nie">
@@ -37,7 +37,7 @@
 
     <label for="plec">Płec:</label><br>
 
-    <input type="radio" id="kobieta" name="plec" value="Kobieta">
+    <input type="radio" id="kobieta" name="plec" value="Kobieta" required>
     <label for="kobieta">Kobieta</label><br>
 
     <input type="radio" id="mężczyzna" name="plec" value="Mężczyzna">
@@ -62,5 +62,6 @@
 </body>
 
 </html>
+
 
 
