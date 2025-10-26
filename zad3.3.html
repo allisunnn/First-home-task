@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+  <title>Zadanie 3.2</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="formularz">
+    <h1>Formularz</h1>
+
+    <form>
+      <label>Imię:
+        <input type="text" name="imie" required>
+      </label>
+
+      <label>Nazwisko:
+        <input type="text" name="nazwisko" required>
+      </label>
+	  
+	  <label>Data:
+        <input type="date" name="data_urodzenia" required>
+      </label>
+	  
+	  <label>Hasło:
+        <input type="password" name="hasło" required>
+      </label>
+	  
+	   <label>Ulica:
+        <input type="text" name="ulica" required>
+      </label>
+	  
+	   <label>Miasto:
+        <input type="text" name="miasto" required>
+      </label>
+	  
+      <label>Email:
+        <input type="email" name="email" required>
+      </label>
+	  
+	  <div class="radio-group">
+        <label for="prawo_jazdy">Czy posiadasz prawo jazdy?</label>
+
+        <label class="radio-option">
+          <input type="radio" id="tak" name="prawo_jazdy" value="tak">
+          Tak
+        </label>
+
+        <label class="radio-option">
+          <input type="radio" id="nie" name="prawo_jazdy" value="nie">
+          Nie
+        </label>
+      </div>
+
+     <div class="radio-group">
+        <label for="płec">Płec</label>
+
+        <label class="radio-option">
+          <input type="radio" id="Kobieta" name="Płec" value="kobieta">
+          Kobieta
+        </label>
+
+        <label class="radio-option">
+          <input type="radio" id="Mezczyzna" name="Płec" value="mezczyzna">
+          Mężczyzna
+        </label>
+		
+		<label class="radio-option">
+          <input type="radio" id="Inna" name="Płec" value="inna">
+          Inna
+        </label>
+      </div>
+	  
+      <label>Wiadomość:
+        <textarea name="wiadomosc" rows="4"></textarea>
+      </label>
+
+      <button type="submit">Wyślij</button>
+    </form>
+	<p>
+        <a href="https://allisunnn.github.io/First-home-task/">Powrót</a>
+    </p>
+  </main>
+</body>
+</html>
