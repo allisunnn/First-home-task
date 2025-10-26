@@ -1,0 +1,34 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+.tekst {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.one-column {
+  column-count: 1;
+  margin-bottom: 30px;
+}
+.two-column {
+	column-count: 2;
+	column-gap: 40px;
+	margin-bottom: 30px;
+}
+.three-column {
+	column-count: 3;
+	column-gap: 40px;
+	margin-bottom: 30px;
+}
+.four-column {
+	column-count: 4;
+	column-gap: 40px;
+	margin-bottom: 30px;
+	
+}
