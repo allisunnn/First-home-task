@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset = "UTF-8" />
+<title>Kalkulator</title>
+<link rel="stylesheet" href="style4.css" />
+</head>
+<body>
+<div class="calc">
+      <input id="display" class="display" type="text" value="0" readonly />
+
+      <div class="keys" id="keys">
+        <button data-action="clear">C</button>
+        <button data-action="delete">DEL</button>
+        <button data-op="/">/</button>
+        <button data-op="*">*</button>
+
+        <button>7</button>
+        <button>8</button>
+        <button>9</button>
+        <button data-op="-">-</button>
+
+        <button>4</button>
+        <button>5</button>
+        <button>6</button>
+        <button data-op="+">+</button>
+
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
+        <button data-action="equals">=</button>
+
+        <button class="span2">0</button>
+        <button>.</button>
+      </div>
+    </div>
+
+    <script>
+      const display = document.getElementById("display");
+      const keys = document.getElementById("keys");
+
+      let input = ""; 
+
+      function updateDisplay(value) {
+        display.value = value;
+      }
+
+      keys.addEventListener("click", (e) => {
+        const btn = e.target.closest("button");
+        if (!btn) return;
+
+        const action = btn.dataset.action;
+        const op = btn.dataset.op;
+        const text = btn.textContent;
+
+        // C – czyści wszystko
+        if (action === "clear") {
+          input = "";
+          updateDisplay("0");
+          return;
+        }
+
+        // DEL – usuwa ostatni znak
+        if (action === "delete") {
+          input = input.slice(0, -1);
+          updateDisplay(input || "0");
+          return;
+        }
+
+        // operator + - * /
+        if (op) {
+          if (input === "") return;
+          input += " " + op + " ";
+          updateDisplay(input);
+          return;
+        }
+
+        // =
+        if (action === "equals") {
+          try {
+            const result = eval(input);
+            updateDisplay(result);
+            input = String(result);
+          } catch {
+            updateDisplay("Błąd");
+            input = "";
+          }
+          return;
+        }
+
+        
+        input += text;
+        updateDisplay(input);
+      });
+    </script>
+	<p>
+        <a href="https://allisunnn.github.io/First-home-task/">Powrót</a>
+    </p>
+</body>
+</html>
