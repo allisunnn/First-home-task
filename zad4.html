@@ -53,21 +53,21 @@
         const op = btn.dataset.op;
         const text = btn.textContent;
 
-        // C – czyści wszystko
+        
         if (action === "clear") {
           input = "";
           updateDisplay("0");
           return;
         }
 
-        // DEL – usuwa ostatni znak
+        
         if (action === "delete") {
           input = input.slice(0, -1);
           updateDisplay(input || "0");
           return;
         }
 
-        // operator + - * /
+        
         if (op) {
           if (input === "") return;
           input += " " + op + " ";
@@ -75,7 +75,7 @@
           return;
         }
 
-        // =
+        
         if (action === "equals") {
           try {
             const result = eval(input);
@@ -97,4 +97,5 @@
         <a href="https://allisunnn.github.io/First-home-task/">Powrót</a>
     </p>
 </body>
+
 </html>
