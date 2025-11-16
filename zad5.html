@@ -95,9 +95,9 @@
     </div>
 
     <script>
-        const XML_FILE = "dane.xml"; // Zmieniona nazwa pliku XML
+        const XML_FILE = "dane.xml"; 
 
-        // Funkcja pomocnicza do pobierania wartości tekstowej z taga
+      
         const pobierzWartosc = (xml, tag, parentTag = null) => {
             let context = xml;
             if (parentTag) {
@@ -109,7 +109,7 @@
             return element ? element.textContent.trim() : '';
         };
 
-        // Funkcja formatująca numer konta na czytelny format (co 4 znaki)
+      
         const formatujKonto = (nr) => {
             const czystyNr = nr.replace(/\s/g, '').replace('PL', '');
             if (czystyNr.length === 26) {
@@ -118,16 +118,16 @@
             return nr;
         };
         
-        // Formatowanie liczby (kropka na przecinek)
+    
         const formatujLiczbe = (liczba) => {
             return String(liczba).replace('.', ',');
         }
 
 
-        // FUNKCJA GŁÓWNA WPELNIAJĄCA DANE
+   
         function wypelnijFormularz(xml) {
             
-            // --- Nagłówek i data ---
+        
             const dataWystawienia = pobierzWartosc(xml, 'data_wystawienia');
             const miejscowosc = pobierzWartosc(xml, 'miejscowosc');
             document.getElementById('miejscowosc_data').textContent = `${miejscowosc}, ${dataWystawienia}`;
@@ -136,25 +136,25 @@
             document.getElementById('forma_platnosci').textContent = pobierzWartosc(xml, 'forma_platnosci');
             document.getElementById('data_dostawy').textContent = pobierzWartosc(xml, 'data_dostawy');
             
-            // --- Sprzedawca ---
+     
             const s_nazwa = pobierzWartosc(xml, 'nazwa', 'sprzedawca');
             const s_adres = pobierzWartosc(xml, 'adres', 'sprzedawca');
             const s_nip = pobierzWartosc(xml, 'nip', 'sprzedawca');
             document.getElementById('sprzedawca_dane').innerHTML = 
                 `<strong>${s_nazwa}</strong><br>${s_adres}<br>${s_nip}`;
 
-            // --- Nabywca ---
+     
             const n_nazwa = pobierzWartosc(xml, 'nazwa', 'nabywca');
             const n_adres = pobierzWartosc(xml, 'adres', 'nabywca');
             const n_nip = pobierzWartosc(xml, 'nip', 'nabywca');
             document.getElementById('nabywca_dane').innerHTML = 
                 `<strong>${n_nazwa}</strong><br>${n_adres}<br>${n_nip}`;
 
-            // --- Bank ---
+      
             const nrKonta = pobierzWartosc(xml, 'nr_konta', 'sprzedawca');
             document.getElementById('sprzedawca_bank_nr_konta').textContent = formatujKonto(nrKonta);
 
-            // --- Pozycje tabeli ---
+           
             const pozycja = xml.getElementsByTagName('pozycja')[0];
             const kontenerPozycji = document.getElementById('pozycje-tabeli');
             kontenerPozycji.innerHTML = ''; 
@@ -177,7 +177,7 @@
                 `;
             }
 
-            // --- Podsumowanie ---
+      
             const pobierzSume = (tag) => formatujLiczbe(pobierzWartosc(xml, tag, 'podsumowanie'));
             
             document.getElementById('netto_sum').textContent = pobierzSume('netto_sum');
@@ -188,12 +188,12 @@
             document.getElementById('zaplacono').textContent = pobierzSume('zaplacono');
             document.getElementById('pozostalo').textContent = pobierzSume('pozostalo');
 
-            // --- Podpisy ---
+           
             document.getElementById('dokument_wystawil').textContent = pobierzWartosc(xml, 'wystawil', 'podpisy');
             document.getElementById('dokument_odebral').textContent = pobierzWartosc(xml, 'odebral', 'podpisy');
         }
 
-        // --- OBSŁUGA ŁADOWANIA PLIKU XML ---
+  
         function wczytajXML() {
             const xhr = new XMLHttpRequest();
             xhr.open("GET", XML_FILE, true); 
@@ -222,4 +222,5 @@
         window.onload = wczytajXML;
     </script>
 </body>
+
 </html>
