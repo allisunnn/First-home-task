@@ -1,202 +1,52 @@
-/* Definicja szerokości dokumentu i podstawowych stylów */
+
 #faktura-container {
-    width: 794px; /* Standardowa szerokość A4 */
+    width: 794px;
     margin: 20px auto;
     border: 1px solid #000;
-    padding: 10px;
+    padding: 15px;
     font-family: Arial, sans-serif;
-    font-size: 11px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.align-right { text-align: right; }
-.align-center { text-align: center; }
 
-/* Nagłówek i data */
-.header-row {
+.info-block {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
+    border: 1px solid #000;
+}
+.strona {
+    width: 48%;
+    padding: 10px;
 }
 
-.tytul-faktury {
-    font-size: 16px;
+
+.tabela-naglowek, .wiersz-danych {
+    display: flex;
+    border-bottom: 1px solid #ccc;
+    padding: 5px 0;
+    font-size: 12px;
+}
+.tabela-naglowek {
     font-weight: bold;
-    border: 1px solid #000;
-    padding: 5px 10px;
+    background-color: #eee;
 }
 
-.data-pole {
-    width: 250px;
-    border: 1px solid #000;
-    padding: 5px;
+
+.tabela-naglowek span, .wiersz-danych span {
+    width: 15%; /* Szerokość dla 6 kolumn + Nazwa */
+    padding: 0 5px;
     text-align: right;
-    font-size: 13px;
+    border-right: 1px solid #eee;
 }
-
-/* Pola Terminu i Daty Dostawy */
-.data-delivery-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
-
-.data-field {
-    border: 1px solid #000;
-    padding: 5px;
-    height: 30px;
-}
-
-.data-field.termin-platnosci, .data-field.forma-platnosci {
-    width: 25%;
-}
-
-.data-field.data-dostawy {
-    width: 40%;
-}
-
-/* Sprzedawca i Nabywca */
-.parties-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-.party-box {
-    width: 48%;
-    border: 1px solid #000;
-    min-height: 100px;
-}
-
-.party-header {
-    background-color: #eee;
-    font-weight: bold;
-    padding: 5px;
-    border-bottom: 1px solid #000;
-    text-align: center;
-}
-
-.party-content {
-    padding: 5px;
-    line-height: 1.5;
-}
-
-/* Bank i numer konta */
-.bank-row {
-    border: 1px solid #000;
-    margin-bottom: 20px;
-    padding: 5px;
-}
-
-.bank-label {
-    font-weight: bold;
-    margin-bottom: 3px;
-}
-
-/* Tabela Towarów/Usług */
-.table-container {
-    border: 1px solid #000;
-    margin-bottom: 20px;
-}
-
-.table-header, .table-row, .summary-row {
-    display: flex;
-    border-bottom: 1px solid #000;
-}
-
-.table-header > div, .table-row > div {
-    border-right: 1px solid #000;
-    padding: 5px 3px;
-    height: 20px;
-    overflow: hidden;
-}
-
-/* Definicja szerokości kolumn */
-.col-lp { width: 4%; text-align: center; }
-.col-nazwa { width: 25%; }
-.col-jm { width: 5%; text-align: center; }
-.col-ilosc { width: 6%; }
-.col-netto { width: 12%; }
-.col-vat { width: 8%; }
-.col-brutto { width: 14%; border-right: none !important; }
-
-/* Wiersz sumy RAZEM */
-.summary-row {
-    height: 40px;
-    display: grid;
-    grid-template-columns: 
-        calc(4% + 25% + 5% + 6% + 12%) 
-        12% 8% 8% 14%; 
-    
-    align-items: center;
-    font-weight: bold;
-    border-bottom: none;
-}
-
-.razem-label {
-    padding-left: 5px;
+.tabela-naglowek span:nth-child(2), .wiersz-danych span:nth-child(2) {
+    width: 20%; /* Nazwa usługi jest szersza */
     text-align: left;
-    border-right: 1px solid #000;
-}
-.razem-netto, .razem-vat, .razem-brutto, .razem-x {
-    border-right: 1px solid #000;
-    padding: 5px 3px;
-}
-.razem-brutto { border-right: none !important; }
-
-/* Sekcja Płatności */
-.payment-section {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
 }
 
-.payment-box {
-    display: flex;
-    width: 30%;
-    align-items: flex-end;
-}
 
-.payment-field-label {
-    width: 40%;
-}
-
-.payment-field-value {
-    width: 45%;
-    border-bottom: 1px solid #000;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.payment-field-currency {
-    width: 15%;
-    font-size: 14px;
-    padding-left: 5px;
-}
-
-/* Sekcja Podpisów */
-.signature-section {
-    display: flex;
-    justify-content: space-between;
-}
-
-.signature-box {
-    width: 48%;
-    min-height: 80px;
-    border: 1px solid #000;
-    text-align: center;
-}
-
-.signature-header {
-    font-weight: bold;
-    background-color: #eee;
-    padding: 5px;
-    border-bottom: 1px solid #000;
-}
-
-.signature-content {
-    padding-top: 50px; 
-    border-top: 1px dotted #000; 
-    margin: 5px 10px;
-    font-size: 11px;
+.sumy {
+    text-align: right;
+    margin-top: 10px;
+    border-top: 1px solid #000;
+    padding-top: 5px;
 }
