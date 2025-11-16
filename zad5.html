@@ -3,224 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zadanie 5 - Faktura Proforma z XML</title>
+    <title>Minimalna Faktura XML</title>
     <link rel="stylesheet" href="style5.css"> 
 </head>
 <body>
 
     <div id="faktura-container">
+        
+        <h1>FAKTURA PROFORMA</h1>
+        
+        <p>Miejsce i Data: <span id="miejscowosc_data"></span></p>
+        <p>Termin płatności: <span id="termin_platnosci"></span> | Forma: <span id="forma_platnosci"></span> | Dostawa: <span id="data_dostawy"></span></p>
 
-        <div class="header-row">
-            <div class="tytul-faktury">FAKTURA PROFORMA</div>
-            <div class="nr-faktury"></div>
-            <div id="miejscowosc_data" class="data-pole"></div>
-        </div>
-
-        <div class="data-delivery-row">
-            <div id="termin_platnosci" class="data-field termin-platnosci"></div>
-            <div id="forma_platnosci" class="data-field forma-platnosci"></div>
-            <div id="data_dostawy" class="data-field data-dostawy"></div>
-        </div>
-
-        <div class="parties-row">
-            <div class="party-box sprzedawca">
-                <div class="party-header">SPRZEDAWCA</div>
-                <div id="sprzedawca_dane" class="party-content"></div> 
+        <div class="info-block">
+            <div class="strona">
+                <h3>SPRZEDAWCA</h3>
+                <div id="sprzedawca_dane"></div>
             </div>
-            <div class="party-box nabywca">
-                <div class="party-header">NABYWCA</div>
-                <div id="nabywca_dane" class="party-content"></div>
+            <div class="strona">
+                <h3>NABYWCA</h3>
+                <div id="nabywca_dane"></div>
             </div>
         </div>
+        
+        <p>Nr konta: <span id="sprzedawca_bank_nr_konta"></span></p>
 
-        <div class="bank-row">
-            <div class="bank-label">Bank, nr konta</div>
-            <div id="sprzedawca_bank_nr_konta" class="bank-content"></div>
+        <h3>Pozycje:</h3>
+        <div class="tabela-naglowek">L.p. | Nazwa | Cena netto | Wartość netto | VAT | Wartość z VAT</div>
+        <div id="pozycje-tabeli"></div>
+
+        <div class="sumy">
+            <p>RAZEM NETTO: <span id="netto_sum"></span></p>
+            <p>RAZEM VAT: <span id="vat_sum"></span></p>
+            <h3>RAZEM BRUTTO: <span id="brutto_sum"></span></h3>
+        </div>
+        
+        <div class="platnosci">
+            <p>Do zapłaty: <span id="do_zaplaty"></span> PLN</p>
+            <p>Pozostało: <span id="pozostalo"></span> PLN</p>
         </div>
 
-        <div class="table-container">
-            <div class="table-header">
-                <div class="col-lp">L.p.</div>
-                <div class="col-nazwa">Nazwa towaru / usługi</div>
-                <div class="col-jm">J.M.</div>
-                <div class="col-ilosc">Ilość</div>
-                <div class="col-netto">Cena netto</div>
-                <div class="col-netto">Wartość netto</div>
-                <div class="col-vat">Stawka VAT</div>
-                <div class="col-vat">Kwota VAT</div>
-                <div class="col-brutto">Wartość z VAT</div>
-            </div>
-
-            <div id="pozycje-tabeli">
-                </div>
-
-            <div class="summary-row">
-                <div class="razem-label">RAZEM</div>
-                <div id="netto_sum" class="razem-netto align-right"></div>
-                <div class="razem-x">X</div>
-                <div id="vat_sum" class="razem-vat align-right"></div>
-                <div id="brutto_sum" class="razem-brutto align-right"></div>
-            </div>
+        <div class="podpisy">
+            <p>Wystawił: <span id="dokument_wystawil"></span></p>
+            <p>Odebrał: <span id="dokument_odebral"></span></p>
         </div>
-
-        <div class="payment-section">
-            <div class="payment-box">
-                <div class="payment-field-label">Razem do zapłaty:</div>
-                <div id="do_zaplaty" class="payment-field-value align-right"></div>
-                <div class="payment-field-currency">PLN</div>
-            </div>
-            <div class="payment-box">
-                <div class="payment-field-label">Zapłacono:</div>
-                <div id="zaplacono" class="payment-field-value align-right"></div>
-                <div class="payment-field-currency">PLN</div>
-            </div>
-            <div class="payment-box">
-                <div class="payment-field-label">Pozostało:</div>
-                <div id="pozostalo" class="payment-field-value align-right"></div>
-                <div class="payment-field-currency">PLN</div>
-            </div>
-        </div>
-
-        <div class="signature-section">
-            <div class="signature-box">
-                <div class="signature-header">Dokument wystawił</div>
-                <div id="dokument_wystawil" class="signature-content"></div>
-            </div>
-            <div class="signature-box">
-                <div class="signature-header">Dokument odebrał</div>
-                <div id="dokument_odebral" class="signature-content"></div>
-            </div>
-        </div>
-
     </div>
 
     <script>
         const XML_FILE = "dane.xml"; 
 
-      
-        const pobierzWartosc = (xml, tag, parentTag = null) => {
-            let context = xml;
-            if (parentTag) {
-                const parent = xml.getElementsByTagName(parentTag)[0];
-                if (parent) context = parent;
-                else return ''; 
-            }
-            const element = context.getElementsByTagName(tag)[0];
-            return element ? element.textContent.trim() : '';
-        };
-
-      
-        const formatujKonto = (nr) => {
-            const czystyNr = nr.replace(/\s/g, '').replace('PL', '');
-            if (czystyNr.length === 26) {
-                return `PL ${czystyNr.substring(0, 2)} ${czystyNr.substring(2, 6)} ${czystyNr.substring(6, 10)} ${czystyNr.substring(10, 14)} ${czystyNr.substring(14, 18)} ${czystyNr.substring(18, 22)} ${czystyNr.substring(22, 26)}`;
-            }
-            return nr;
-        };
-        
-    
-        const formatujLiczbe = (liczba) => {
-            return String(liczba).replace('.', ',');
+        function getText(xmlDoc, tag, parentTag = null) {
+            let selector = tag;
+            if (parentTag) { selector = parentTag + ' ' + tag; }
+            const node = xmlDoc.querySelector(selector);
+            return node ? node.textContent.trim() : '';
         }
-
-
-   
-        function wypelnijFormularz(xml) {
-            
         
-            const dataWystawienia = pobierzWartosc(xml, 'data_wystawienia');
-            const miejscowosc = pobierzWartosc(xml, 'miejscowosc');
-            document.getElementById('miejscowosc_data').textContent = `${miejscowosc}, ${dataWystawienia}`;
+        const formatujLiczbe = (liczba) => String(liczba).replace('.', ',');
+
+        function wypelnijFakture(xmlDoc) {
+
+            const s_nazwa = getText(xmlDoc, 'nazwa', 'sprzedawca');
+            const s_adres = getText(xmlDoc, 'adres', 'sprzedawca');
+            document.getElementById('sprzedawca_dane').innerHTML = `<strong>${s_nazwa}</strong><br>${s_adres}`;
             
-            document.getElementById('termin_platnosci').textContent = pobierzWartosc(xml, 'termin_platnosci');
-            document.getElementById('forma_platnosci').textContent = pobierzWartosc(xml, 'forma_platnosci');
-            document.getElementById('data_dostawy').textContent = pobierzWartosc(xml, 'data_dostawy');
-            
-     
-            const s_nazwa = pobierzWartosc(xml, 'nazwa', 'sprzedawca');
-            const s_adres = pobierzWartosc(xml, 'adres', 'sprzedawca');
-            const s_nip = pobierzWartosc(xml, 'nip', 'sprzedawca');
-            document.getElementById('sprzedawca_dane').innerHTML = 
-                `<strong>${s_nazwa}</strong><br>${s_adres}<br>${s_nip}`;
+            const n_nazwa = getText(xmlDoc, 'nazwa', 'nabywca');
+            const n_adres = getText(xmlDoc, 'adres', 'nabywca');
+            document.getElementById('nabywca_dane').innerHTML = `<strong>${n_nazwa}</strong><br>${n_adres}`;
 
-     
-            const n_nazwa = pobierzWartosc(xml, 'nazwa', 'nabywca');
-            const n_adres = pobierzWartosc(xml, 'adres', 'nabywca');
-            const n_nip = pobierzWartosc(xml, 'nip', 'nabywca');
-            document.getElementById('nabywca_dane').innerHTML = 
-                `<strong>${n_nazwa}</strong><br>${n_adres}<br>${n_nip}`;
+            document.getElementById('miejscowosc_data').textContent = `${getText(xmlDoc, 'miejscowosc')}, ${getText(xmlDoc, 'data_wystawienia')}`;
+            document.getElementById('termin_platnosci').textContent = getText(xmlDoc, 'termin_platnosci');
+            document.getElementById('forma_platnosci').textContent = getText(xmlDoc, 'forma_platnosci');
+            document.getElementById('data_dostawy').textContent = getText(xmlDoc, 'data_dostawy');
+            document.getElementById('sprzedawca_bank_nr_konta').textContent = getText(xmlDoc, 'nr_konta', 'sprzedawca');
 
-      
-            const nrKonta = pobierzWartosc(xml, 'nr_konta', 'sprzedawca');
-            document.getElementById('sprzedawca_bank_nr_konta').textContent = formatujKonto(nrKonta);
-
-           
-            const pozycja = xml.getElementsByTagName('pozycja')[0];
-            const kontenerPozycji = document.getElementById('pozycje-tabeli');
-            kontenerPozycji.innerHTML = ''; 
-
+            const pozycja = xmlDoc.querySelector('pozycja');
             if (pozycja) {
-                const p = (tag) => pobierzWartosc(pozycja, tag).replace('.', ',');
-
-                kontenerPozycji.innerHTML = `
-                    <div class="table-row">
-                        <div class="col-lp align-center">${pozycja.getAttribute('lp')}</div>
-                        <div class="col-nazwa">${p('nazwa')}</div>
-                        <div class="col-jm align-center">${p('jm')}</div>
-                        <div class="col-ilosc align-right">${p('ilosc')}</div>
-                        <div class="col-netto align-right">${p('cena_netto')}</div>
-                        <div class="col-netto align-right">${p('wartosc_netto')}</div>
-                        <div class="col-vat align-center">${p('stawka_vat')}</div>
-                        <div class="col-vat align-right">${p('kwota_vat')}</div>
-                        <div class="col-brutto align-right">${p('wartosc_brutto')}</div>
+                const p = (tag) => formatujLiczbe(pozycja.querySelector(tag).textContent);
+                
+                document.getElementById('pozycje-tabeli').innerHTML = `
+                    <div class="wiersz-danych">
+                        <span>${pozycja.getAttribute('lp')}</span>
+                        <span>${pozycja.querySelector('nazwa').textContent}</span>
+                        <span>${p('cena_netto')}</span>
+                        <span>${p('wartosc_netto')}</span>
+                        <span>${pozycja.querySelector('stawka_vat').textContent}</span>
+                        <span>${p('wartosc_brutto')}</span>
                     </div>
                 `;
             }
 
-      
-            const pobierzSume = (tag) => formatujLiczbe(pobierzWartosc(xml, tag, 'podsumowanie'));
-            
+       
+            const pobierzSume = (tag) => formatujLiczbe(getText(xmlDoc, tag, 'podsumowanie'));
             document.getElementById('netto_sum').textContent = pobierzSume('netto_sum');
             document.getElementById('vat_sum').textContent = pobierzSume('vat_sum');
             document.getElementById('brutto_sum').textContent = pobierzSume('brutto_sum');
-            
             document.getElementById('do_zaplaty').textContent = pobierzSume('do_zaplaty');
-            document.getElementById('zaplacono').textContent = pobierzSume('zaplacono');
             document.getElementById('pozostalo').textContent = pobierzSume('pozostalo');
-
+            
            
-            document.getElementById('dokument_wystawil').textContent = pobierzWartosc(xml, 'wystawil', 'podpisy');
-            document.getElementById('dokument_odebral').textContent = pobierzWartosc(xml, 'odebral', 'podpisy');
+            document.getElementById('dokument_wystawil').textContent = getText(xmlDoc, 'wystawil', 'podpisy');
+            document.getElementById('dokument_odebral').textContent = getText(xmlDoc, 'odebral', 'podpisy');
         }
 
-  
-        function wczytajXML() {
-            const xhr = new XMLHttpRequest();
-            xhr.open("GET", XML_FILE, true); 
-            xhr.setRequestHeader("Content-Type", "application/xml");
-            
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        const xmlDoc = xhr.responseXML;
-                        if (xmlDoc) {
-                            wypelnijFormularz(xmlDoc);
-                        } else {
-                            console.error(`Błąd parsowania XML. Plik ${XML_FILE} nie jest poprawnie sformatowany.`);
-                            document.getElementById('faktura-container').innerHTML = `BŁĄD PARSOWANIA: Sprawdź konsolę i plik ${XML_FILE}.`;
-                        }
-                    } else {
-                        console.error(`BŁĄD Wczytywania pliku XML. Status: ${xhr.status}. Użyj serwera lokalnego.`);
-                        document.getElementById('faktura-container').innerHTML = `BŁĄD: Nie udało się wczytać pliku ${XML_FILE}. Otwórz stronę przez lokalny serwer HTTP (np. Live Server).`;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch(XML_FILE)
+                .then(response => response.text()) 
+                .then(xmlDataString => {
+                    const parser = new DOMParser();
+                    const xmlDoc = parser.parseFromString(xmlDataString, "text/xml"); 
+                    if (xmlDoc.getElementsByTagName("parsererror").length) {
+                        throw new Error("Błąd parsowania XML.");
                     }
-                }
-            };
-            
-            xhr.send();
-        }
-
-        window.onload = wczytajXML;
+                    wypelnijFakture(xmlDoc);
+                })
+                .catch(error => {
+                    document.getElementById('faktura-container').innerHTML = 
+                        `<h3 style="color: red;">BŁĄD: Nie udało się załadować danych.</h3>`;
+                });
+        });
     </script>
 </body>
-
 </html>
