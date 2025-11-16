@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faktura Proforma z XML</title>
+    <link rel="stylesheet" href="faktura.css">
+</head>
+<body>
+
+    <div id="faktura-container">
+        <span id="miejscowosc_data" class="faktura-pole"></span>
+        <span id="termin_platnosci" class="faktura-pole"></span>
+        <span id="forma_platnosci" class="faktura-pole"></span>
+        <span id="data_dostawy" class="faktura-pole"></span>
+
+        <span id="sprzedawca_nazwa_adres" class="faktura-pole"></span>
+        <span id="sprzedawca_nip" class="faktura-pole"></span>
+        
+        <span id="nabywca_nazwa_adres" class="faktura-pole"></span>
+        <span id="nabywca_nip" class="faktura-pole"></span>
+
+        <span id="sprzedawca_bank_nr_konta" class="faktura-pole"></span>
+        
+        <span id="lp_1" class="faktura-pole"></span>
+        <span id="nazwa_towaru_1" class="faktura-pole"></span>
+        <span id="jm_1" class="faktura-pole"></span>
+        <span id="ilosc_1" class="faktura-pole"></span>
+        <span id="cena_netto_1" class="faktura-pole"></span>
+        <span id="wartosc_netto_1" class="faktura-pole"></span>
+        <span id="stawka_vat_1" class="faktura-pole"></span>
+        <span id="kwota_vat_1" class="faktura-pole"></span>
+        <span id="wartosc_z_vat_1" class="faktura-pole"></span>
+        
+        <span id="netto_sum" class="faktura-pole"></span>
+        <span id="vat_sum" class="faktura-pole"></span>
+        <span id="brutto_sum" class="faktura-pole"></span>
+
+        <span id="do_zaplaty" class="faktura-pole"></span>
+        <span id="zaplacono" class="faktura-pole"></span>
+        <span id="pozostalo" class="faktura-pole"></span>
+
+        <span id="dokument_wystawil" class="faktura-pole"></span>
+        <span id="dokument_odebral" class="faktura-pole"></span>
+    </div>
+
+    <script>
+        const XML_FILE = "faktura.xml";
+
+        // Funkcja pomocnicza do pobierania wartości tekstowej z taga
+        const pobierzWartosc = (xml, tag, parentTag = null) => {
+            let context = xml;
+            if (parentTag) {
+                const parent = xml.getElementsByTagName(parentTag)[0];
+                if (parent) context = parent;
+                else return ''; 
+            }
+            const element = context.getElementsByTagName(tag)[0];
+            return element ? element.textContent.trim() : '';
+        };
+
+        // Funkcja formatująca numer konta na czytelny format (co 4 znaki)
+        const formatujKonto = (nr) => {
+            // Usuń spacje i sformatuj na grupy po 4 cyfry
+            const czystyNr = nr.replace(/\s/g, '').replace('PL', '');
+            if (czystyNr.length === 26) {
+                return 'PL' + czystyNr.match(/.{1,4}/g).join(' ');
+            }
+            return nr;
+        };
+
+        // Funkcja główna wstawiająca dane z XML do HTML
+        function wypelnijFormularz(xml) {
+            
+            // --- Nagłówek i data ---
+            const dataWystawienia = pobierzWartosc(xml, 'data_wystawienia');
+            const miejscowosc = pobierzWartosc(xml, 'miejscowosc');
+            document.getElementById('miejscowosc_data').textContent = `${miejscowosc}, ${dataWystawienia}`;
+            
+            document.getElementById('termin_platnosci').textContent = pobierzWartosc(xml, 'termin_platnosci');
+            document.getElementById('forma_platnosci').textContent = pobierzWartosc(xml, 'forma_platnosci');
+            document.getElementById('data_dostawy').textContent = pobierzWartosc(xml, 'data_dostawy');
+            
+            // --- Sprzedawca ---
+            const s_nazwa = pobierzWartosc(xml, 'nazwa', 'sprzedawca');
+            const s_adres = pobierzWartosc(xml, 'adres', 'sprzedawca');
+            document.getElementById('sprzedawca_nazwa_adres').innerHTML = s_nazwa + '<br>' + s_adres;
+            document.getElementById('sprzedawca_nip').textContent = pobierzWartosc(xml, 'nip', 'sprzedawca');
+            
+            const nrKonta = pobierzWartosc(xml, 'nr_konta', 'sprzedawca');
+            document.getElementById('sprzedawca_bank_nr_konta').textContent = formatujKonto(nrKonta);
+
+            // --- Nabywca ---
+            const n_nazwa = pobierzWartosc(xml, 'nazwa', 'nabywca');
+            const n_adres = pobierzWartosc(xml, 'adres', 'nabywca');
+            document.getElementById('nabywca_nazwa_adres').innerHTML = n_nazwa + '<br>' + n_adres;
+            document.getElementById('nabywca_nip').textContent = pobierzWartosc(xml, 'nip', 'nabywca');
+
+            // --- Pozycje tabeli (tylko pierwsza pozycja) ---
+            const pozycja = xml.getElementsByTagName('pozycja')[0];
+            if (pozycja) {
+                const pobierzPozycje = (tag) => {
+                    const element = pozycja.getElementsByTagName(tag)[0];
+                    return element ? element.textContent.replace('.', ',') : '';
+                };
+
+                document.getElementById('lp_1').textContent = pozycja.getAttribute('lp');
+                document.getElementById('nazwa_towaru_1').textContent = pobierzPozycje('nazwa');
+                document.getElementById('jm_1').textContent = pobierzPozycje('jm');
+                document.getElementById('ilosc_1').textContent = pobierzPozycje('ilosc');
+                document.getElementById('cena_netto_1').textContent = pobierzPozycje('cena_netto');
+                document.getElementById('wartosc_netto_1').textContent = pobierzPozycje('wartosc_netto');
+                document.getElementById('stawka_vat_1').textContent = pobierzPozycje('stawka_vat');
+                document.getElementById('kwota_vat_1').textContent = pobierzPozycje('kwota_vat');
+                document.getElementById('wartosc_z_vat_1').textContent = pobierzPozycje('wartosc_brutto');
+            }
+            
+            // --- Podsumowanie ---
+            const pobierzSume = (tag) => pobierzWartosc(xml, tag, 'podsumowanie').replace('.', ',');
+            
+            document.getElementById('netto_sum').textContent = pobierzSume('netto_sum');
+            document.getElementById('vat_sum').textContent = pobierzSume('vat_sum');
+            document.getElementById('brutto_sum').textContent = pobierzSume('brutto_sum');
+            
+            document.getElementById('do_zaplaty').textContent = pobierzSume('do_zaplaty');
+            document.getElementById('zaplacono').textContent = pobierzSume('zaplacono');
+            document.getElementById('pozostalo').textContent = pobierzSume('pozostalo');
+
+            // --- Podpisy ---
+            document.getElementById('dokument_wystawil').textContent = pobierzWartosc(xml, 'wystawil', 'podpisy');
+            document.getElementById('dokument_odebral').textContent = pobierzWartosc(xml, 'odebral', 'podpisy');
+        }
+
+        // Funkcja do wczytywania i parsowania pliku XML
+        function wczytajXML() {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", XML_FILE, true); 
+            xhr.setRequestHeader("Content-Type", "application/xml");
+            
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        const xmlDoc = xhr.responseXML;
+                        if (xmlDoc) {
+                            wypelnijFormularz(xmlDoc);
+                        } else {
+                            console.error("Błąd parsowania XML. Sprawdź, czy plik jest poprawny.");
+                            document.getElementById('faktura-container').innerHTML = `BŁĄD PARSOWANIA: Sprawdź konsolę i poprawność pliku ${XML_FILE}.`;
+                        }
+                    } else {
+                        console.error(`BŁĄD Wczytywania pliku XML. Status: ${xhr.status}. Użyj serwera lokalnego.`);
+                        document.getElementById('faktura-container').innerHTML = `BŁĄD: Nie udało się wczytać pliku ${XML_FILE}. Upewnij się, że używasz serwera lokalnego (Live Server).`;
+                    }
+                }
+            };
+            
+            xhr.send();
+        }
+
+        window.onload = wczytajXML;
+    </script>
+</body>
+</html>
