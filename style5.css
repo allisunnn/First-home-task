@@ -33,13 +33,13 @@
 
 
 .tabela-naglowek span, .wiersz-danych span {
-    width: 15%; /* Szerokość dla 6 kolumn + Nazwa */
+    width: 15%; 
     padding: 0 5px;
     text-align: right;
     border-right: 1px solid #eee;
 }
 .tabela-naglowek span:nth-child(2), .wiersz-danych span:nth-child(2) {
-    width: 20%; /* Nazwa usługi jest szersza */
+    width: 20%;
     text-align: left;
 }
 
@@ -50,3 +50,4 @@
     border-top: 1px solid #000;
     padding-top: 5px;
 }
+
