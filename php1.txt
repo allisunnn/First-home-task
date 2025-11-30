@@ -1,0 +1,96 @@
+<html>
+<head>
+    <title>Studenci</title>
+</head>
+<body>
+
+<?php
+$host = "sql100.infinityfree.com";
+$user = "if0_40498749";
+$pass = "kei9DsZQqYGYn3";
+$db   = "if0_40498749_project";
+
+$connection = mysqli_connect($host, $user, $pass, $db);
+if (!$connection) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+
+if (isset($_POST['dodaj'])) {
+    $imie = $_POST['imie'];
+    $nazwisko = $_POST['nazwisko'];
+    $wiek = $_POST['wiek'];
+
+    $sql = "INSERT INTO Studenci (imie, nazwisko, wiek) VALUES ('$imie', '$nazwisko', '$wiek')";
+    mysqli_query($connection, $sql);
+}
+
+
+if (isset($_GET['del'])) {
+    $id = $_GET['del'];
+    mysqli_query($connection, "DELETE FROM Studenci WHERE id=$id");
+}
+
+
+if (isset($_POST['zapisz'])) {
+    $id = $_POST['id'];
+    $imie = $_POST['imie'];
+    $nazwisko = $_POST['nazwisko'];
+    $wiek = $_POST['wiek'];
+
+    $sql = "UPDATE Studenci SET imie='$imie', nazwisko='$nazwisko', wiek='$wiek' WHERE id=$id";
+    mysqli_query($connection, $sql);
+}
+
+
+$editData = null;
+if (isset($_GET['edit'])) {
+    $id = $_GET['edit'];
+    $res = mysqli_query($connection, "SELECT * FROM Studenci WHERE id=$id");
+    $editData = mysqli_fetch_assoc($res);
+}
+
+
+$sql = "SELECT * FROM Studenci ORDER BY id ASC";
+$result = mysqli_query($connection, $sql);
+
+
+$counter = 1;
+while ($row = mysqli_fetch_assoc($result)) {
+    echo $counter . ". " . $row['imie'] . " " . $row['nazwisko'] . " " . $row['wiek'];
+    echo " <a href='index.php?edit=".$row['id']."'>Edytuj</a>";
+    echo " <a href='index.php?del=".$row['id']."'>Usuń</a><br>";
+    $counter++;
+}
+
+echo "<br><br>";
+
+
+?>
+
+
+<form action="index.php" method="post">
+    <input type="text" name="imie" placeholder="Imię">
+    <input type="text" name="nazwisko" placeholder="Nazwisko">
+    <input type="text" name="wiek" placeholder="Wiek">
+    <input type="submit" name="dodaj" value="Dodaj">
+</form>
+
+<?php
+
+if ($editData) {
+    ?>
+    <h3>Edytuj studenta</h3>
+    <form action="index.php" method="post">
+        <input type="hidden" name="id" value="<?php echo $editData['id']; ?>">
+        <input type="text" name="imie" value="<?php echo $editData['imie']; ?>">
+        <input type="text" name="nazwisko" value="<?php echo $editData['nazwisko']; ?>">
+        <input type="text" name="wiek" value="<?php echo $editData['wiek']; ?>">
+        <input type="submit" name="zapisz" value="Zapisz zmiany">
+    </form>
+    <?php
+}
+?>
+
+</body>
+</html>
