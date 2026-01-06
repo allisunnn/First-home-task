@@ -3,25 +3,21 @@ const loadingText = document.getElementById("loading");
 
 console.log("JS działa");
 
-fetch("https://restcountries.com/v3.1/all")
+fetch("https://restcountries.com/v3.1/all?fields=name,capital,population,flags")
     .then(response => {
+        console.log("Status HTTP:", response.status);
+
         if (!response.ok) {
             throw new Error("Błąd HTTP: " + response.status);
         }
         return response.json();
     })
     .then(data => {
-        console.log("Odebrane dane:", data);
-
-        if (!Array.isArray(data)) {
-            throw new Error("Dane nie są tablicą");
-        }
+        console.log("Dane:", data);
 
         loadingText.remove();
 
-        const selectedCountries = data.slice(0, 12);
-
-        selectedCountries.forEach(country => {
+        data.slice(0, 12).forEach(country => {
             const name = country.name.common;
             const capital = country.capital ? country.capital[0] : "brak danych";
             const population = country.population.toLocaleString();
