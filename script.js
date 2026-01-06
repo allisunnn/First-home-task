@@ -1,19 +1,20 @@
 const container = document.getElementById("countries");
 const loadingText = document.getElementById("loading");
 
-console.log("JS działa");
+console.log("JS DZIAŁA");
 
-// pobieranie danych z zewnętrznego API
 fetch("https://jsonplaceholder.typicode.com/users")
     .then(response => {
-        console.log("Status HTTP:", response.status);
+        console.log("HTTP status:", response.status);
+
         if (!response.ok) {
             throw new Error("Błąd HTTP: " + response.status);
         }
+
         return response.json();
     })
     .then(data => {
-        console.log("Dane:", data);
+        console.log("Dane odebrane:", data);
 
         loadingText.remove();
 
@@ -22,16 +23,4 @@ fetch("https://jsonplaceholder.typicode.com/users")
             card.className = "country-card";
 
             card.innerHTML = `
-                <h2>${user.name}</h2>
-                <p><strong>Email:</strong> ${user.email}</p>
-                <p><strong>Miasto:</strong> ${user.address.city}</p>
-                <p><strong>Firma:</strong> ${user.company.name}</p>
-            `;
-
-            container.appendChild(card);
-        });
-    })
-    .catch(error => {
-        console.error("Błąd:", error);
-        loadingText.textContent = "Błąd podczas pobierania danych.";
-    });
+                <h2>${use
