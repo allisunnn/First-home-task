@@ -22,5 +22,16 @@ fetch("https://jsonplaceholder.typicode.com/users")
             const card = document.createElement("div");
             card.className = "country-card";
 
-            card.innerHTML = `
-                <h2>${use
+            card.innerHTML =
+                "<h2>" + user.name + "</h2>" +
+                "<p><strong>Email:</strong> " + user.email + "</p>" +
+                "<p><strong>Miasto:</strong> " + user.address.city + "</p>" +
+                "<p><strong>Firma:</strong> " + user.company.name + "</p>";
+
+            container.appendChild(card);
+        });
+    })
+    .catch(error => {
+        console.error(error);
+        loadingText.textContent = "Błąd podczas pobierania danych.";
+    });
